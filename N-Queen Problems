@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+using namespace std;
+int ways = 0;
+// this is the function to check if the current cell is appropriate to place the queen
+// we are filling queens row wise -> check for upper right, left diagnol and column
+bool canPlace(int board[][15], int i, int j, int n)
+{
+    // check for the column
+    for (int row = 0; row < i; row++)
+    {
+        if (board[row][j] == 1)
+            return false;
+    }
+    // check for the right left diagnol
+    int x = i;
+    int y = j;
+    while (x >= 0 and y >= 0)
+    {
+        if (board[x][y] == 1)
+            return false;
+        x--;
+        y--;
+    }
+    // check for the upper right diagnol
+    x = i;
+    y = j;
+    while (x >= 0 and y < n)
+    {
+        if (board[x][y] == 1)
+            return false;
+        x--;
+        y++;
+    }
+    return true;
+}
+
+// this is the function that will return true or false if we are able to place the queens or not
+bool NQueenSolve(int board[][15], int i, int n)
+{
+    // base case
+    // we have reached the last row -> print the board and return true
+    if (i == n)
+    {
+        //print the board
+        // for (int x = 0; x < n; x++)
+        // {
+        //     for (int y = 0; y < n; y++)
+        //     {
+        //         cout << board[x][y] << " ";
+        //     }
+        //     cout << endl;
+        // }
+        // cout << endl
+        //      << endl;
+        ++ways;
+        return false;
+    }
+    // we will check for each and every cell of that row
+    for (int j = 0; j < n; j++)
+    {
+        if (canPlace(board, i, j, n))
+        {
+            board[i][j] = 1;
+            bool nextAnswer = NQueenSolve(board, i + 1, n);
+            // if the nextAnswer returns true then it means the queen placed is right
+            if (nextAnswer)
+                return true;
+            // this is the backtrack step ... that means the current cell is not appropriate
+            board[i][j] = 0;
+        }
+    }
+    // we cannot place the queen in that row so return false
+    return false;
+}
+
+int main()
+{
+
+    int n;
+    cin >> n;
+    int chessBoard[15][15] = {0};
+
+    NQueenSolve(chessBoard, 0, n);
+    cout << ways << endl;
+}
